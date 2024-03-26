@@ -54,15 +54,6 @@ class Net(nn.Module):
         r = nn.ReLU()
 
         x =r( self.nnconv1(x, edge_index, edge_attr))
-
-
-
-
-
-
-
-
-
         x = global_mean_pool(x, batch)
         x = r(self.fc1(x))
         x = r(self.fc2(x))
@@ -98,10 +89,6 @@ class EdgeModel2(nn.Module):
         x= self.fc1(x).relu()
         x=self.fc2(x).relu()
         return x
-
-
-
-
 
 with open("variablesConfig.yaml", "r") as file:
     variablesConfig = yaml.safe_load(file)
@@ -171,8 +158,6 @@ def reset_weights(m):
 def train(model, num_epochs):
     c = 0
     mae = L1Loss()
-
-
     iqrlist = []
     batch_size = 64
 
@@ -216,7 +201,6 @@ def train(model, num_epochs):
                 loss = criterion2(output, batch.y.view(-1, output_dim).float().to(device))
                 loss.backward()
                 optimizer.step()
-
                 loss2 = torch.abs(output - batch.y.view(-1, output_dim).float().to(device))
 
                 runningLoss = runningLoss + loss2.sum().item()
@@ -224,18 +208,9 @@ def train(model, num_epochs):
                 count=count + 64
 
             runningLoss = runningLoss/count
-
-
             if (epoch + 1) % 2 == 0:
-
-
-
-                print(str(fold + 1) + " iteration")
-
+            ````print(str(fold + 1) + " iteration")
                 print(f'Epoch {epoch + 1}/{num_epochs}, Training  Loss: {runningLoss}')
-
-
-
                 print("*****validation loss****")
                 model_new.eval()
                 with torch.no_grad():
